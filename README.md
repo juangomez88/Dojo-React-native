@@ -382,3 +382,106 @@ const styles = StyleSheet.create({
 
 export default PokemonList;
 ```
+Ahora en la carpeta ***mainComponent*** creamos el archivo **MainComponent.tsx**, así:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/ee43dbea-ac10-4e2a-ad5b-135a8abd8ded)
+
+Igual que en los archivos anteriores empazamos con las importaciones:
+
+```
+import React from 'react';
+import { useFirstGenPokemons } from '../api/APi';
+import PokemonList from '../pokemonList/PokemonList';
+import { StyleSheet, Text, View } from 'react-native';
+```
+Y los estilos que usaremos:
+```
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+    },
+    title: {
+        fontSize: 32,
+        color: 'black'
+    },
+})
+```
+Posteriormente, creamos la funcion **MainComponent()** que será la encargada de retornar los elementos de nuestra aplicación:
+```
+export default function MainComponent() {
+    const firstGenPokemonDetails = useFirstGenPokemons();
+
+    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>First generation Pokemon</Text>
+            <PokemonList data={firstGenPokemonDetails} />
+        </View>
+
+
+    );
+}
+```
+
+La linea: `console.log('firstGenPokemonDetails', firstGenPokemonDetails);` nos muestra en consola si la api nos está retornado información.
+
+Finalmente el archivo completo se vería así:
+```
+import React from 'react';
+import { useFirstGenPokemons } from '../api/APi';
+import PokemonList from '../pokemonList/PokemonList';
+import { StyleSheet, Text, View } from 'react-native';
+
+
+export default function MainComponent() {
+    const firstGenPokemonDetails = useFirstGenPokemons();
+
+    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>First generation Pokemon</Text>
+            <PokemonList data={firstGenPokemonDetails} />
+        </View>
+
+
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+    },
+    title: {
+        fontSize: 32,
+        color: 'black'
+    },
+})
+```
+Si vamos al simulador esta será la vista que tendremos:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/4037124a-5980-4cf1-928e-faddb5deb4c6)
+
+esto porque el archivo de entrada de la aplicación **App.tsx** no se ha modificado, debemos borrar su contenido y poner el siguiente codigo:
+
+```
+import React from 'react'
+import MainComponent from './src/mainComponent/MainComponent';
+
+export default function App() {
+  return (
+      <MainComponent />
+  )
+}
+```
+El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la tecla **r** para realizar la acción de ***reload the app***. El resultado final es este:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/c3f61f5c-2161-4862-872e-9e08687a537b)
+
