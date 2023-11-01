@@ -278,3 +278,107 @@ const styles = StyleSheet.create({
 
 export default PokemonListItem;
 ```
+Luego en la misma carpeta ***pokemonList*** creamos el archivo **PokemonList** así:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/94579261-0013-4df7-a45d-2c55e1c81469)
+
+iniciamos con las siguientes importación:
+```
+import React from 'react';
+import PokemonListItem from './PokemonListItem';
+import { FlatList, View, StyleSheet } from 'react-native';
+```
+
+y los estilos que vamos a usar:
+
+```
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'grey',
+        top: 50,
+        borderRadius: 50
+    },
+    textSyle: {
+        textAlign: 'center'
+    }
+});
+```
+Como en el archivo anterior definimos:
+
+```
+type Pokemon = {
+    id: number;
+    name: string;
+    sprites: {
+        front_default: string;
+    };
+};
+
+interface PokemonListProps {
+    data: Pokemon[];
+}
+```
+
+Y posteriormente se crea la funcion **PokemonList** que toma el objeto que devuelve el **api** y lo destructura como argumento **data** para poder mostrar los pokemon como una estructura de **react**.
+
+```
+function PokemonList({ data }: PokemonListProps) {
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+            />
+        </View>
+    );
+}
+
+```
+este sería el archivo final:
+
+```
+// PokemonList.js - Componente para la lista de Pokémon
+import React from 'react';
+import PokemonListItem from './PokemonListItem';
+import { FlatList, View, StyleSheet } from 'react-native';
+
+type Pokemon = {
+    id: number;
+    name: string;
+    sprites: {
+        front_default: string;
+    };
+};
+
+interface PokemonListProps {
+    data: Pokemon[];
+}
+
+function PokemonList({ data }: PokemonListProps) {
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'grey',
+        top: 50,
+        borderRadius: 50
+    },
+    textSyle: {
+        textAlign: 'center'
+    }
+});
+
+export default PokemonList;
+```
