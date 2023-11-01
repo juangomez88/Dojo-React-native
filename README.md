@@ -1,6 +1,6 @@
 # Dojo-React-native
 
-## Instalar dependicas:
+## Instalaciones requeridas:
 Se necesitaran para el realizar el proyecto en windows:
 
   * Node: Se recomienda la version LTS de Node, link de descarga: [Node](https://nodejs.org/en/download) 
@@ -38,9 +38,106 @@ El SDK se instala, de forma predeterminada, en la siguiente ubicación:
 ## En caso de necesitar las intrucciones desde  la documentación oficial:
 ### [Configurar el entorno de desarrollo](https://reactnative.dev/docs/environment-setup?guide=native&os=windows) 
 
+# Iniciar poryecto:
 
-# Iniciar el proyecto con react native:
+En una carpata donde quieras iniciar el proyecto realiza:
+
+## Iniciar el proyecto con react native:
 `npx react-native@latest init NOMBRE_PROYECTO`
+
 
 # [Opcional] Usar una versión o plantilla específica:
 `npx react-native@X.XX.X init AwesomeProject --version X.XX.X`
+
+Luego de terminada la instalación con el comando **cd** "nombre de la carpeta" ingresar a la carpeta 
+
+## Dependencias:
+* `npm i expo-status-bar`
+
+## Iniciar proyecto:
+
+En consola digita: 
+* `Code .` para abrir el **Visual estudio code**
+* `npm start`
+  Luego de presionado el comando algo asi se despleagará en la consola:
+
+  ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b4462b19-bd72-4445-8777-4b026d75d7ca)
+
+Presionamos ***a*** para desplegar el emulador de *andriod*, luego de esperar un momento se debe desplegar una aplicacion
+similar a esta:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/5f42613e-55c9-4093-bfd0-49376dd01aa1)
+
+
+En la raiz principal del proyecto crear la carpeta ***src***, y dentro de esta crear tres ***carpetas*** así:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b499a334-c140-4f6c-ba0a-3b63b5f4a184)
+
+Vamos a usar la api de [pokemon](https://pokeapi.co/)
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b8976225-f4b4-4d77-a8de-e92a246ca823)
+
+
+En la carpeta ***api*** vamos crear el archivo **Api.tsx** asi:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/9e824ad3-5a7f-4404-a3f9-5ee637927528)
+
+
+En el archivo **Api.tsx** pondremos el siguiente código:
+
+```
+import React, { useEffect, useState } from 'react';
+
+const pokePath = "https://pokeapi.co/api/v2/";
+const pokeQuery = "pokemon?limit=300&offset=0";
+const firstGenPokemonPath = `${pokePath}${pokeQuery}`;
+
+export function useFirstGenPokemons() {
+    const [firstGenPokemonDetails, setFirstGenPokemonDetails] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchFirstGenPokemons = async () => {
+            try {
+                const firstGenPokemonIdsResponse = await fetch(firstGenPokemonPath);
+                if (!firstGenPokemonIdsResponse.ok) {
+                    throw new Error('Error al obtener datos de la API');
+                }
+                const firstGenPokemonIdsBody = await firstGenPokemonIdsResponse.json();
+
+                const firstGenPokemonDetails = await Promise.all(
+                    firstGenPokemonIdsBody.results.map(async (p: { url: string }) => {
+                        try {
+                            const pDetailsResponse = await fetch(p.url);
+                            if (!pDetailsResponse.ok) {
+                                throw new Error('Error al obtener detalles del Pokémon');
+                            }
+                            const pDetails = await pDetailsResponse.json();
+                            return pDetails;
+                        } catch (error) {
+                            console.error('Error al obtener detalles del Pokémon:', error);
+                            return null;
+                        }
+                    })
+                );
+
+                setFirstGenPokemonDetails(firstGenPokemonDetails.filter((p) => p !== null));
+            } catch (error) {
+                console.error('Error al obtener datos de la API:', error);
+            }
+        };
+
+        fetchFirstGenPokemons();
+    }, []);
+
+    return firstGenPokemonDetails;
+}
+
+```
+Este archivo será el que nos conecta con la [Api](https://pokeapi.co/), se importaran los ***UseEffect*** y ***useState*** de react.
+Las constantes: 
+```
+const pokePath = "https://pokeapi.co/api/v2/";
+const pokeQuery = "pokemon?limit=300&offset=0";
+const firstGenPokemonPath = `${pokePath}${pokeQuery};
+```
+Sirven para acotar la cantidad de respuestas que el api nos dará, es decir la cantidad de pokemones. Y la función ***useFirstGenPokemons*** se exporta para que pueda ser utilizada en otros componentes.
