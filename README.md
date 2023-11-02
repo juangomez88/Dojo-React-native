@@ -132,7 +132,7 @@ export function useFirstGenPokemons() {
 }
 ```
 
-Este archivo será el que nos conecta con la [Api](https://pokeapi.co/), se importaran los ***UseEffect*** y ***useState*** de react.
+Este archivo será el que nos conecta con la [Api](https://pokeapi.co/), se importaran los ***useEffect*** y ***useState*** de react.
 Las constantes:
 
 ```javascript
