@@ -85,63 +85,89 @@ En la carpeta ***api*** vamos crear el archivo **Api.tsx** asi:
 En el archivo **Api.tsx** pondremos el siguiente código:
 
 ```JavaScript
-import React, { useEffect, useState } from 'react';
+import React,{
+    useEffect,
+    useState
+    }           from 'react';
 
-const pokePath = "https://pokeapi.co/api/v2/";
-const pokeQuery = "pokemon?limit=300&offset=0";
-const firstGenPokemonPath = `${pokePath}${pokeQuery}`;
+const pokePath              = "https://pokeapi.co/api/v2/";
+// const pokeQuery             = "pokemon?limit=300&offset=0";
+// const firstGenPokemonPath   = `${pokePath}${pokeQuery}`;
 
-export function useFirstGenPokemons() {
-    const [firstGenPokemonDetails, setFirstGenPokemonDetails] = useState<any[]>([]);
+export function useFirstGenPokemons(page: number) {
+    const [firstGenPokemonDetails, setFirstGenPokemonDetails]   = useState<any[]>([]);
+    const limit                                                 = 50;
+    const offset                                                = (page - 1) * limit;
 
     useEffect(() => {
         const fetchFirstGenPokemons = async () => {
             try {
-                const firstGenPokemonIdsResponse = await fetch(firstGenPokemonPath);
+                const pagePokemonPath               = `${pokePath}pokemon?limit=${limit}&offset=${offset}`;
+                const firstGenPokemonIdsResponse    = await fetch(pagePokemonPath);
+
                 if (!firstGenPokemonIdsResponse.ok) {
                     throw new Error('Error al obtener datos de la API');
                 }
-                const firstGenPokemonIdsBody = await firstGenPokemonIdsResponse.json();
-
-                const firstGenPokemonDetails = await Promise.all(
+                
+                const firstGenPokemonIdsBody    = await firstGenPokemonIdsResponse.json();
+                const firstGenPokemonDetails    = await Promise.all(
                     firstGenPokemonIdsBody.results.map(async (p: { url: string }) => {
                         try {
                             const pDetailsResponse = await fetch(p.url);
                             if (!pDetailsResponse.ok) {
                                 throw new Error('Error al obtener detalles del Pokémon');
                             }
-                            const pDetails = await pDetailsResponse.json();
-                            return pDetails;
+                            return await pDetailsResponse.json();
                         } catch (error) {
                             console.error('Error al obtener detalles del Pokémon:', error);
                             return null;
                         }
                     })
                 );
-
                 setFirstGenPokemonDetails(firstGenPokemonDetails.filter((p) => p !== null));
             } catch (error) {
                 console.error('Error al obtener datos de la API:', error);
             }
         };
-
         fetchFirstGenPokemons();
-    }, []);
-
+    }, [page]);
     return firstGenPokemonDetails;
 }
 ```
 
-Este archivo será el que nos conecta con la [Api](https://pokeapi.co/), se importaran los ***UseEffect*** y ***useState*** de react.
-Las constantes:
+Este archivo será el que nos conecta con la [Api](https://pokeapi.co/).
+
+Inicialmente se pretendía listar todos los pokemon, sin embargo, esto afecta al rendimiento del dispositivo, por lo que la estructura ha cambiado considerablemente. Solo usaremos la variable ***pokePath***, que permitirá conectarnos a la API,  a través de fetch.
 
 ```javascript
-const pokePath = "https://pokeapi.co/api/v2/";
-const pokeQuery = "pokemon?limit=300&offset=0";
-const firstGenPokemonPath = `${pokePath}${pokeQuery};
+const pokePath              = "https://pokeapi.co/api/v2/";
+// const pokeQuery             = "pokemon?limit=300&offset=0";
+// const firstGenPokemonPath   = `${pokePath}${pokeQuery}`;
 ```
 
-Sirven para acotar la cantidad de respuestas que el api nos dará, es decir la cantidad de pokemones. Y la función ***useFirstGenPokemons*** se exporta para que pueda ser utilizada en otros componentes.
+Sirven para acotar la cantidad de respuestas que el api nos dará, es decir la cantidad de pokemones. Con ella tendremos la oportunidad de paginar y controlar la cantidad de pokemon que deseamos ver. Y la función ***useFirstGenPokemons*** se exporta para que pueda ser utilizada en otros componentes
+
+```javascript
+    const pagePokemonPath = `${pokePath}pokemon?limit=${limit}&offset=${offset}`;
+```
+
+---
+
+## Algo sobre los hooks
+
+ En el código se importaran los ***UseEffect*** y ***useState*** de react. Estos son hooks, y son usados para agregar capacidades de estado y otros comportamientos a componentes funcionales en lugar de componentes basados en clases. Los hooks permiten que los desarrolladores de React  puedan acceder a características de React como el estado, el ciclo de vida, y el contexto en componentes funcionales sin necesidad de crear clases.
+
+* useState: Este hook permite a un componente funcional mantener y actualizar su estado local. Puedes usarlo para gestionar variables de estado en tus componentes sin necesidad de una clase.
+
+* useEffect: Permite realizar efectos secundarios en componentes funcionales. Puedes usarlo para realizar tareas como suscripciones a eventos, llamadas a la API y actualizaciones del DOM cuando el componente se monta, actualiza o desmonta.
+
+* useContext: Este hook permite acceder al contexto de la aplicación en componentes funcionales. Puedes utilizarlo para acceder a datos globales compartidos en tu aplicación.
+
+* useRef: Te permite mantener una referencia mutable a un elemento del DOM o a un valor que persiste a lo largo de las renderizaciones del componente.
+
+* Otros hooks personalizados: Puedes crear tus propios hooks personalizados para encapsular la lógica reutilizable y compartirla entre componentes funcionales.
+
+---
 
 Ahora la carpeta ***pokemonListItem*** crea mos el archivo **PokemonListItem.tsx** así:
 
@@ -150,30 +176,35 @@ Ahora la carpeta ***pokemonListItem*** crea mos el archivo **PokemonListItem.tsx
 En el archivo **PokemonListItem.tsx** empezaremos con las importaciones y posteriormente con los estilos que utilizaremos, así:
 
 ```javascript
-import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import React    from 'react'
+import {
+    Image,
+    StyleSheet,
+    Text,
+    View
+}               from 'react-native'
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "lightgrey",
-        marginTop: 10
+        backgroundColor : "lightgrey",
+        marginTop   : 10
     },
     pokemonContainer: {
-        fontSize: 32,
-        textAlign: "center",
-        marginTop: 10
+        fontSize    : 32,
+        textAlign   : "center",
+        marginTop   : 10
     },
     imageContainer: {
-        width: 200,
-        height: 200,
-        alignSelf: "center",
+        width       : 200,
+        height      : 200,
+        alignSelf   : "center",
         borderRadius: 10,
-        overflow: 'hidden',
+        overflow    : 'hidden',
     },
     imageStyle: {
-        flex: 1,
-        width: undefined,
-        height: undefined,
+        flex        : 1,
+        width       : undefined,
+        height      : undefined,
     }
 });
 ```
@@ -187,13 +218,13 @@ Posteriormente se definen tres propiedades un ***type***:
 Estas quedarían de la siguiente forma:
 
 ```javascript
-    type Pokemon = {
-        id: number;
-        name: string;
-        sprites: {
-            front_default: string;
-        };
+type Pokemon = {
+    id      : number;
+    name    : string;
+    sprites : {
+        front_default: string;
     };
+};
 ```
 
 Se define una interfaz llamada PokemonListItemProps que toma un objeto pokemon de tipo Pokemon.
@@ -207,7 +238,7 @@ interface PokemonListItemProps {
 Finalmente definimos la función **PokemonListItem**:
 
 ```javascript
-function PokemonListItem({ pokemon } : PokemonListItemProps) {
+export function PokemonListItem({ pokemon } : PokemonListItemProps) {
     return (
         <View style={styles.container}>
             <Text style={styles.pokemonContainer}>
@@ -216,26 +247,30 @@ function PokemonListItem({ pokemon } : PokemonListItemProps) {
 
             <View style={styles.imageContainer}>
                 <Image 
-                    source={{uri: pokemon.sprites.front_default}}
-                    style={styles.imageStyle}
+                    source  = {{uri: pokemon.sprites.front_default}}
+                    style   = {styles.imageStyle}
                 />
             </View>
         </View>
     );
 }
-
 ```
 
 el archivo completo quedaría asi:
 
 ```javascript
-import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import React    from 'react'
+import {
+    Image,
+    StyleSheet,
+    Text,
+    View
+}               from 'react-native'
 
 type Pokemon = {
-    id: number;
-    name: string;
-    sprites: {
+    id      : number;
+    name    : string;
+    sprites : {
         front_default: string;
     };
 };
@@ -244,8 +279,7 @@ interface PokemonListItemProps {
     pokemon: Pokemon;
 }
 
-
-function PokemonListItem({ pokemon } : PokemonListItemProps) {
+export function PokemonListItem({ pokemon } : PokemonListItemProps) {
     return (
         <View style={styles.container}>
             <Text style={styles.pokemonContainer}>
@@ -254,8 +288,8 @@ function PokemonListItem({ pokemon } : PokemonListItemProps) {
 
             <View style={styles.imageContainer}>
                 <Image 
-                    source={{uri: pokemon.sprites.front_default}}
-                    style={styles.imageStyle}
+                    source  = {{uri: pokemon.sprites.front_default}}
+                    style   = {styles.imageStyle}
                 />
             </View>
         </View>
@@ -264,30 +298,31 @@ function PokemonListItem({ pokemon } : PokemonListItemProps) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "lightgrey",
-        marginTop: 10
+        backgroundColor : "lightgrey",
+        marginTop   : 10
     },
     pokemonContainer: {
-        fontSize: 32,
-        textAlign: "center",
-        marginTop: 10
+        fontSize    : 32,
+        textAlign   : "center",
+        marginTop   : 10
     },
     imageContainer: {
-        width: 200,
-        height: 200,
-        alignSelf: "center",
+        width       : 200,
+        height      : 200,
+        alignSelf   : "center",
         borderRadius: 10,
-        overflow: 'hidden',
+        overflow    : 'hidden',
     },
     imageStyle: {
-        flex: 1,
-        width: undefined,
-        height: undefined,
+        flex        : 1,
+        width       : undefined,
+        height      : undefined,
     }
 });
 
-export default PokemonListItem;
 ```
+
+---
 
 Luego en la misma carpeta ***pokemonList*** creamos el archivo **PokemonList** así:
 
@@ -296,9 +331,29 @@ Luego en la misma carpeta ***pokemonList*** creamos el archivo **PokemonList** a
 iniciamos con las siguientes importación:
 
 ```javascript
-import React from 'react';
-import PokemonListItem from './PokemonListItem';
-import { FlatList, View, StyleSheet } from 'react-native';
+import React                from 'react';
+import {
+    FlatList,
+    View,
+    StyleSheet
+    }                       from 'react-native';
+import {PokemonListItem}    from './PokemonListItem';
+```
+
+Como en el archivo anterior definimos:
+
+```javascript
+type Pokemon = {
+    id      : number;
+    name    : string;
+    sprites : {
+        front_default: string;
+    };
+};
+
+interface PokemonListProps {
+    data: Pokemon[];
+}
 ```
 
 y los estilos que vamos a usar:
@@ -317,51 +372,38 @@ const styles = StyleSheet.create({
 });
 ```
 
-Como en el archivo anterior definimos:
-
-```javascript
-type Pokemon = {
-    id: number;
-    name: string;
-    sprites: {
-        front_default: string;
-    };
-};
-
-interface PokemonListProps {
-    data: Pokemon[];
-}
-```
-
 Y posteriormente se crea la funcion **PokemonList** que toma el objeto que devuelve el **api** y lo destructura como argumento **data** para poder mostrar los pokemon como una estructura de **react**.
 
 ```javascript
-function PokemonList({ data }: PokemonListProps) {
+export function PokemonList({ data }: PokemonListProps) {
     return (
         <View style={styles.container}>
             <FlatList
-                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+                data        = {data.map((pokemon, index)    => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor= {(item)                       => item.id.toString()}
+                renderItem  = {({ item })                   => <PokemonListItem pokemon={item} />}
             />
         </View>
     );
 }
-
 ```
 
 este sería el archivo final:
 
 ```javascript
 // PokemonList.js - Componente para la lista de Pokémon
-import React from 'react';
-import PokemonListItem from './PokemonListItem';
-import { FlatList, View, StyleSheet } from 'react-native';
+import React                from 'react';
+import {
+    FlatList,
+    View,
+    StyleSheet
+    }                       from 'react-native';
+import {PokemonListItem}    from './PokemonListItem';
 
 type Pokemon = {
-    id: number;
-    name: string;
-    sprites: {
+    id      : number;
+    name    : string;
+    sprites : {
         front_default: string;
     };
 };
@@ -370,44 +412,54 @@ interface PokemonListProps {
     data: Pokemon[];
 }
 
-function PokemonList({ data }: PokemonListProps) {
+export function PokemonList({ data }: PokemonListProps) {
     return (
         <View style={styles.container}>
             <FlatList
-                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+                data        = {data.map((pokemon, index)    => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor= {(item)                       => item.id.toString()}
+                renderItem  = {({ item })                   => <PokemonListItem pokemon={item} />}
             />
         </View>
     );
 }
 
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'grey',
-        top: 50,
-        borderRadius: 50
+    container   : {
+        flex            : 1,
+        backgroundColor : 'grey',
+        top             : 50,
+        borderRadius    : 50
     },
-    textSyle: {
-        textAlign: 'center'
+    textSyle    : {
+        textAlign       : 'center'
     }
 });
 
-export default PokemonList;
 ```
 
-Ahora en la carpeta ***mainComponent*** creamos el archivo **MainComponent.tsx**, así:
+---
+
+Ahora en la carpeta ***mainComponent*** creamos el archivo **ListPockemonScreen.tsx**, así:
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/ee43dbea-ac10-4e2a-ad5b-135a8abd8ded)
 
 Igual que en los archivos anteriores empazamos con las importaciones:
 
 ```javascript
-import React from 'react';
-import { useFirstGenPokemons } from '../api/APi';
-import PokemonList from '../pokemonList/PokemonList';
-import { StyleSheet, Text, View } from 'react-native';
+import React,{
+    useState,
+    }                           from 'react';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+    }                           from 'react-native';
+import { useFirstGenPokemons }  from '../API/API';
+import {PokemonList}            from '../pokemonList/PokemonList';
+
 ```
 
 Y los estilos que usaremos:
@@ -415,35 +467,62 @@ Y los estilos que usaremos:
 ```javascript
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
+        flex            : 1,
+        justifyContent  : 'center',
+        alignItems      : 'center',
+        backgroundColor : 'black',
     },
     title: {
-        fontSize: 32,
-        color: 'black'
+        fontSize        : 32,
+        color           : 'black'
     },
 })
 ```
 
-Posteriormente, creamos la funcion **MainComponent()** que será la encargada de retornar los elementos de nuestra aplicación:
+Posteriormente, creamos la funcion **ListPockemonScreen()** que será la encargada de retornar los elementos de nuestra aplicación:
 
 ```javascript
-export default function MainComponent() {
-    const firstGenPokemonDetails = useFirstGenPokemons();
+export default function ListPokemonScreen() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const data                          = useFirstGenPokemons(currentPage);
 
-    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+    const goToPreviousPage              = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const goToNextPage                  = () => {
+        if (data.length < 10) {
+            return;
+        }
+        setCurrentPage(currentPage + 1);
+    };
+
+    console.log('useFirstGenPokemons', data);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>First generation Pokemon</Text>
-            <PokemonList data={firstGenPokemonDetails} />
+            <Text style         = {styles.title}>First generation Pokemon</Text>
+            <PokemonList data={data} />
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    style   = {styles.button}
+                    onPress = {goToPreviousPage}
+                >
+                    <Text style = {styles.textButton}>Atras</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style   = {styles.button}
+                    onPress = {goToNextPage}
+                >
+                    <Text style = {styles.textButton}>{currentPage}</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-
-
     );
 }
+
 ```
 
 La linea: `console.log('firstGenPokemonDetails', firstGenPokemonDetails);` nos muestra en consola si la api nos está retornado información.
@@ -451,40 +530,91 @@ La linea: `console.log('firstGenPokemonDetails', firstGenPokemonDetails);` nos m
 Finalmente el archivo completo se vería así:
 
 ```javascript
-import React from 'react';
-import { useFirstGenPokemons } from '../api/APi';
-import PokemonList from '../pokemonList/PokemonList';
-import { StyleSheet, Text, View } from 'react-native';
+import React,{
+    useState,
+    }                           from 'react';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+    }                           from 'react-native';
+import { useFirstGenPokemons }  from '../API/API';
+import {PokemonList}            from '../pokemonList/PokemonList';
 
 
-export default function MainComponent() {
-    const firstGenPokemonDetails = useFirstGenPokemons();
+export default function ListPokemonScreen() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const data                          = useFirstGenPokemons(currentPage);
 
-    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+    const goToPreviousPage              = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
+    const goToNextPage                  = () => {
+        if (data.length < 10) {
+            return;
+        }
+        setCurrentPage(currentPage + 1);
+    };
+    
+    console.log('useFirstGenPokemons', data);
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>First generation Pokemon</Text>
-            <PokemonList data={firstGenPokemonDetails} />
+            <Text style         = {styles.title}>First generation Pokemon</Text>
+            <PokemonList data={data} />
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    style   = {styles.button}
+                    onPress = {goToPreviousPage}
+                >
+                    <Text style = {styles.textButton}>Atras</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style   = {styles.button}
+                    onPress = {goToNextPage}
+                >
+                    <Text style = {styles.textButton}>{currentPage}</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-
-
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
+        flex            : 1,
+        justifyContent  : 'center',
+        alignItems      : 'center',
+        backgroundColor : 'black',
+    },
+    buttonContainer: {
+        flexDirection  : 'row',
+        justifyContent  : 'space-between',
+        alignItems      : 'center',
+    },
+    button:{
+        backgroundColor: 'blue',
+        padding        : 10,
+        borderRadius   : 30,
+        shadowRadius   : 10,
+    },
+    textButton:{
+        color           : 'white',
+        fontWeight      : 'bold',
+        textAlign       : 'center',
+        textTransform   : 'uppercase',
     },
     title: {
-        fontSize: 32,
-        color: 'black'
+        fontSize        : 32,
+        color           : 'black'
     },
 })
 ```
+
+---
 
 Si vamos al simulador esta será la vista que tendremos:
 
@@ -494,11 +624,11 @@ esto porque el archivo de entrada de la aplicación **App.tsx** no se ha modific
 
 ```javascript
 import React from 'react'
-import MainComponent from './src/mainComponent/MainComponent';
+import ListPokemonScreen from './src/mainComponent/ListPokemonScreen';
 
 export default function App() {
 return (
-    <MainComponent />
+    <ListPokemonScreen />
 )
 }
 ```
