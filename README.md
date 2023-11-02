@@ -74,7 +74,7 @@ En la raiz principal del proyecto crear la carpeta ***src***, y dentro de esta c
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b499a334-c140-4f6c-ba0a-3b63b5f4a184)
 
-Vamos a usar la api de [pokemon](https://pokeapi.co/)
+Vamos a usar la api de pokemon [pokéAPI](https://pokeapi.co/)
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b8976225-f4b4-4d77-a8de-e92a246ca823)
 
