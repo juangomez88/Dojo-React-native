@@ -485,6 +485,7 @@ const styles = StyleSheet.create({
 Posteriormente, creamos la funcion **ListPockemonScreen()** que será la encargada de retornar los elementos de nuestra aplicación:
 
 ```javascript
+
 export default function ListPokemonScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const data                          = useFirstGenPokemons(currentPage);
@@ -501,30 +502,36 @@ export default function ListPokemonScreen() {
         }
         setCurrentPage(currentPage + 1);
     };
-
+    
     console.log('useFirstGenPokemons', data);
-
     return (
         <View style={styles.container}>
-            <Text style         = {styles.title}>First generation Pokemon</Text>
-            <PokemonList data={data} />
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToPreviousPage}
-                >
-                    <Text style = {styles.textButton}>Atras</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToNextPage}
-                >
+            <View>
+                <Text style         = {styles.title}>Primera Generación</Text>
+                <Text style         = {styles.title}>Pockemon</Text>
+            </View>
+            <View  style={styles.secundaryContainer}>
+                <PokemonList data={data} />
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToPreviousPage}
+                    >
+                        <Text style = {styles.textButton}>Atras</Text>
+                    </TouchableOpacity>
                     <Text style = {styles.textButton}>{currentPage}</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToNextPage}
+                    >
+                        <Text style = {styles.textButton}>Siguiente</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
 }
+
 
 ```
 
@@ -544,6 +551,7 @@ import {
     }                           from 'react-native';
 import { useFirstGenPokemons }  from '../API/API';
 import {PokemonList}            from '../pokemonList/PokemonList';
+
 
 
 export default function ListPokemonScreen() {
@@ -566,25 +574,32 @@ export default function ListPokemonScreen() {
     console.log('useFirstGenPokemons', data);
     return (
         <View style={styles.container}>
-            <Text style         = {styles.title}>First generation Pokemon</Text>
-            <PokemonList data={data} />
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToPreviousPage}
-                >
-                    <Text style = {styles.textButton}>Atras</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToNextPage}
-                >
+            <View>
+                <Text style         = {styles.title}>Primera Generación</Text>
+                <Text style         = {styles.title}>Pockemon</Text>
+            </View>
+            <View  style={styles.secundaryContainer}>
+                <PokemonList data={data} />
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToPreviousPage}
+                    >
+                        <Text style = {styles.textButton}>Atras</Text>
+                    </TouchableOpacity>
                     <Text style = {styles.textButton}>{currentPage}</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToNextPage}
+                    >
+                        <Text style = {styles.textButton}>Siguiente</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

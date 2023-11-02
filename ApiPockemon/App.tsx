@@ -1,8 +1,8 @@
 import React          from 'react'
-import MainComponent  from './src/mainComponent/MainComponent';
+import ListPokemonScreen  from './src/mainComponent/ListPokemonScreen';
 
 export default function App() {
 return (
-    <MainComponent />
+    <ListPokemonScreen />
 )
 }

@@ -31,21 +31,27 @@ export default function ListPokemonScreen() {
     console.log('useFirstGenPokemons', data);
     return (
         <View style={styles.container}>
-            <Text style         = {styles.title}>First generation Pokemon</Text>
-            <PokemonList data={data} />
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToPreviousPage}
-                >
-                    <Text style = {styles.textButton}>Atras</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style   = {styles.button}
-                    onPress = {goToNextPage}
-                >
+            <View>
+                <Text style         = {styles.title}>Primera Generación</Text>
+                <Text style         = {styles.title}>Pockemon</Text>
+            </View>
+            <View  style={styles.secundaryContainer}>
+                <PokemonList data={data} />
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToPreviousPage}
+                    >
+                        <Text style = {styles.textButton}>Atras</Text>
+                    </TouchableOpacity>
                     <Text style = {styles.textButton}>{currentPage}</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style   = {styles.button}
+                        onPress = {goToNextPage}
+                    >
+                        <Text style = {styles.textButton}>Siguiente</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -58,16 +64,22 @@ const styles = StyleSheet.create({
         alignItems      : 'center',
         backgroundColor : 'black',
     },
+    secundaryContainer: {
+        flexDirection   : 'column',
+        justifyContent  : 'center',
+        marginbutton    : 50,
+    },
     buttonContainer: {
-        flexDirection  : 'row',
+        flexDirection   : 'row',
         justifyContent  : 'space-between',
         alignItems      : 'center',
     },
     button:{
         backgroundColor: 'blue',
-        padding        : 10,
-        borderRadius   : 30,
-        shadowRadius   : 10,
+        padding         : 10,
+        margin          : 50,
+        borderRadius    : 30,
+        shadowRadius    : 10,
     },
     textButton:{
         color           : 'white',
@@ -77,6 +89,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize        : 32,
-        color           : 'black'
+        fontWeight      : 'bold',
+        textAlign       : 'center',
+        color           : 'white',
     },
 })
