@@ -16,13 +16,13 @@ export default function MainComponent() {
     const [currentPage, setCurrentPage] = useState(1);
     const data                          = useFirstGenPokemons(currentPage);
 
-    const goToPreviousPage = () => {
+    const goToPreviousPage              = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
     };
 
-    const goToNextPage = () => {
+    const goToNextPage                  = () => {
         if (data.length < 10) {
             return;
         }
@@ -32,8 +32,8 @@ export default function MainComponent() {
     return (
         <View style={styles.container}>
             <Text style         = {styles.title}>First generation Pokemon</Text>
-            <PokemonList data={data} />
-            <View style={styles.buttonContainer}>
+            <PokemonList data   = {data} />
+            <View style         = {styles.buttonContainer}>
                 <TouchableOpacity
                     style   = {styles.button}
                     onPress = {goToPreviousPage}

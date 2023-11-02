@@ -38,6 +38,9 @@ El SDK se instala, de forma predeterminada, en la siguiente ubicación:
 
 [Configurar el entorno de desarrollo](https://reactnative.dev/docs/environment-setup?guide=native&os=windows)
 
+---
+---
+
 # Iniciar poryecto
 
 En una carpata donde quieras iniciar el proyecto realiza:
@@ -74,7 +77,7 @@ En la raiz principal del proyecto crear la carpeta ***src***, y dentro de esta c
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b499a334-c140-4f6c-ba0a-3b63b5f4a184)
 
-Vamos a usar la api de [pokemon](https://pokeapi.co/)
+Vamos a usar la api de pokemon [pokéAPI](https://pokeapi.co/)
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/b8976225-f4b4-4d77-a8de-e92a246ca823)
 
@@ -361,13 +364,13 @@ y los estilos que vamos a usar:
 ```javascript
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'grey',
-        top: 50,
-        borderRadius: 50
+        flex            : 1,
+        backgroundColor : 'grey',
+        top             : 50,
+        borderRadius    : 50
     },
     textSyle: {
-        textAlign: 'center'
+        textAlign       : 'center'
     }
 });
 ```
@@ -636,3 +639,6 @@ return (
 El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la tecla **r** para realizar la acción de ***reload the app***. El resultado final es este:
 
 ![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/c3f61f5c-2161-4862-872e-9e08687a537b)
+
+---
+---
