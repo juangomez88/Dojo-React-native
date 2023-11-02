@@ -51,13 +51,14 @@ En una carpata donde quieras iniciar el proyecto realiza:
 `npx react-native@X.XX.X init AwesomeProject --version X.XX.X`
 Luego de terminada la instalación con el comando **cd** "nombre de la carpeta" ingresar a la carpeta
 
-## Dependencias:
+## Dependencias
 
 * `npm i expo-status-bar`
 
-## Iniciar proyecto:
+## Iniciar proyecto
 
 En consola digita:
+
 * `Code .` para abrir el **Visual estudio code**
 * `npm start`
 Luego de presionado el comando algo asi se despleagará en la consola:
@@ -83,62 +84,62 @@ En la carpeta ***api*** vamos crear el archivo **Api.tsx** asi:
 
 En el archivo **Api.tsx** pondremos el siguiente código:
 
-    ```
-    import React, { useEffect, useState } from 'react';
+```JavaScript
+import React, { useEffect, useState } from 'react';
 
-    const pokePath = "https://pokeapi.co/api/v2/";
-    const pokeQuery = "pokemon?limit=300&offset=0";
-    const firstGenPokemonPath = `${pokePath}${pokeQuery}`;
+const pokePath = "https://pokeapi.co/api/v2/";
+const pokeQuery = "pokemon?limit=300&offset=0";
+const firstGenPokemonPath = `${pokePath}${pokeQuery}`;
 
-    export function useFirstGenPokemons() {
-        const [firstGenPokemonDetails, setFirstGenPokemonDetails] = useState<any[]>([]);
+export function useFirstGenPokemons() {
+    const [firstGenPokemonDetails, setFirstGenPokemonDetails] = useState<any[]>([]);
 
-        useEffect(() => {
-            const fetchFirstGenPokemons = async () => {
-                try {
-                    const firstGenPokemonIdsResponse = await fetch(firstGenPokemonPath);
-                    if (!firstGenPokemonIdsResponse.ok) {
-                        throw new Error('Error al obtener datos de la API');
-                    }
-                    const firstGenPokemonIdsBody = await firstGenPokemonIdsResponse.json();
-
-                    const firstGenPokemonDetails = await Promise.all(
-                        firstGenPokemonIdsBody.results.map(async (p: { url: string }) => {
-                            try {
-                                const pDetailsResponse = await fetch(p.url);
-                                if (!pDetailsResponse.ok) {
-                                    throw new Error('Error al obtener detalles del Pokémon');
-                                }
-                                const pDetails = await pDetailsResponse.json();
-                                return pDetails;
-                            } catch (error) {
-                                console.error('Error al obtener detalles del Pokémon:', error);
-                                return null;
-                            }
-                        })
-                    );
-
-                    setFirstGenPokemonDetails(firstGenPokemonDetails.filter((p) => p !== null));
-                } catch (error) {
-                    console.error('Error al obtener datos de la API:', error);
+    useEffect(() => {
+        const fetchFirstGenPokemons = async () => {
+            try {
+                const firstGenPokemonIdsResponse = await fetch(firstGenPokemonPath);
+                if (!firstGenPokemonIdsResponse.ok) {
+                    throw new Error('Error al obtener datos de la API');
                 }
-            };
+                const firstGenPokemonIdsBody = await firstGenPokemonIdsResponse.json();
 
-            fetchFirstGenPokemons();
-        }, []);
+                const firstGenPokemonDetails = await Promise.all(
+                    firstGenPokemonIdsBody.results.map(async (p: { url: string }) => {
+                        try {
+                            const pDetailsResponse = await fetch(p.url);
+                            if (!pDetailsResponse.ok) {
+                                throw new Error('Error al obtener detalles del Pokémon');
+                            }
+                            const pDetails = await pDetailsResponse.json();
+                            return pDetails;
+                        } catch (error) {
+                            console.error('Error al obtener detalles del Pokémon:', error);
+                            return null;
+                        }
+                    })
+                );
 
-        return firstGenPokemonDetails;
-    }
+                setFirstGenPokemonDetails(firstGenPokemonDetails.filter((p) => p !== null));
+            } catch (error) {
+                console.error('Error al obtener datos de la API:', error);
+            }
+        };
 
-    ```
+        fetchFirstGenPokemons();
+    }, []);
+
+    return firstGenPokemonDetails;
+}
+```
+
 Este archivo será el que nos conecta con la [Api](https://pokeapi.co/), se importaran los ***UseEffect*** y ***useState*** de react.
 Las constantes:
 
-    ```
-    const pokePath = "https://pokeapi.co/api/v2/";
-    const pokeQuery = "pokemon?limit=300&offset=0";
-    const firstGenPokemonPath = `${pokePath}${pokeQuery};
-    ```
+```javascript
+const pokePath = "https://pokeapi.co/api/v2/";
+const pokeQuery = "pokemon?limit=300&offset=0";
+const firstGenPokemonPath = `${pokePath}${pokeQuery};
+```
 
 Sirven para acotar la cantidad de respuestas que el api nos dará, es decir la cantidad de pokemones. Y la función ***useFirstGenPokemons*** se exporta para que pueda ser utilizada en otros componentes.
 
@@ -148,34 +149,34 @@ Ahora la carpeta ***pokemonListItem*** crea mos el archivo **PokemonListItem.tsx
 
 En el archivo **PokemonListItem.tsx** empezaremos con las importaciones y posteriormente con los estilos que utilizaremos, así:
 
-    ```
-    import React from 'react'
-    import { Image, StyleSheet, Text, View } from 'react-native'
+```javascript
+import React from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-    const styles = StyleSheet.create({
-        container: {
-            backgroundColor: "lightgrey",
-            marginTop: 10
-        },
-        pokemonContainer: {
-            fontSize: 32,
-            textAlign: "center",
-            marginTop: 10
-        },
-        imageContainer: {
-            width: 200,
-            height: 200,
-            alignSelf: "center",
-            borderRadius: 10,
-            overflow: 'hidden',
-        },
-        imageStyle: {
-            flex: 1,
-            width: undefined,
-            height: undefined,
-        }
-    });
-    ```
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: "lightgrey",
+        marginTop: 10
+    },
+    pokemonContainer: {
+        fontSize: 32,
+        textAlign: "center",
+        marginTop: 10
+    },
+    imageContainer: {
+        width: 200,
+        height: 200,
+        alignSelf: "center",
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    imageStyle: {
+        flex: 1,
+        width: undefined,
+        height: undefined,
+    }
+});
+```
 
 Posteriormente se definen tres propiedades un ***type***:
 
@@ -183,7 +184,9 @@ Posteriormente se definen tres propiedades un ***type***:
 * name (nombre del Pokémon)
 * sprites (que tiene una propiedad llamada front_default que contiene una URL de la imagen del Pokémon).
 
-    ```
+Estas quedarían de la siguiente forma:
+
+```javascript
     type Pokemon = {
         id: number;
         name: string;
@@ -191,100 +194,100 @@ Posteriormente se definen tres propiedades un ***type***:
             front_default: string;
         };
     };
-    ```
+```
 
 Se define una interfaz llamada PokemonListItemProps que toma un objeto pokemon de tipo Pokemon.
 
-    ```
-    interface PokemonListItemProps {
-        pokemon: Pokemon;
-    }
-    ```
+```javascript
+interface PokemonListItemProps {
+    pokemon: Pokemon;
+}
+```
 
 Finalmente definimos la función **PokemonListItem**:
 
-    ```
-    function PokemonListItem({ pokemon } : PokemonListItemProps) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.pokemonContainer}>
-                    {pokemon.id}.{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                </Text>
+```javascript
+function PokemonListItem({ pokemon } : PokemonListItemProps) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.pokemonContainer}>
+                {pokemon.id}.{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+            </Text>
 
-                <View style={styles.imageContainer}>
-                    <Image 
-                        source={{uri: pokemon.sprites.front_default}}
-                        style={styles.imageStyle}
-                    />
-                </View>
+            <View style={styles.imageContainer}>
+                <Image 
+                    source={{uri: pokemon.sprites.front_default}}
+                    style={styles.imageStyle}
+                />
             </View>
-        );
-    }
+        </View>
+    );
+}
 
-    ```
+```
 
 el archivo completo quedaría asi:
 
-    ```
-    import React from 'react'
-    import { Image, StyleSheet, Text, View } from 'react-native'
+```javascript
+import React from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-    type Pokemon = {
-        id: number;
-        name: string;
-        sprites: {
-            front_default: string;
-        };
+type Pokemon = {
+    id: number;
+    name: string;
+    sprites: {
+        front_default: string;
     };
+};
 
-    interface PokemonListItemProps {
-        pokemon: Pokemon;
-    }
+interface PokemonListItemProps {
+    pokemon: Pokemon;
+}
 
 
-    function PokemonListItem({ pokemon } : PokemonListItemProps) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.pokemonContainer}>
-                    {pokemon.id}.{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                </Text>
+function PokemonListItem({ pokemon } : PokemonListItemProps) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.pokemonContainer}>
+                {pokemon.id}.{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+            </Text>
 
-                <View style={styles.imageContainer}>
-                    <Image 
-                        source={{uri: pokemon.sprites.front_default}}
-                        style={styles.imageStyle}
-                    />
-                </View>
+            <View style={styles.imageContainer}>
+                <Image 
+                    source={{uri: pokemon.sprites.front_default}}
+                    style={styles.imageStyle}
+                />
             </View>
-        );
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: "lightgrey",
+        marginTop: 10
+    },
+    pokemonContainer: {
+        fontSize: 32,
+        textAlign: "center",
+        marginTop: 10
+    },
+    imageContainer: {
+        width: 200,
+        height: 200,
+        alignSelf: "center",
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    imageStyle: {
+        flex: 1,
+        width: undefined,
+        height: undefined,
     }
+});
 
-    const styles = StyleSheet.create({
-        container: {
-            backgroundColor: "lightgrey",
-            marginTop: 10
-        },
-        pokemonContainer: {
-            fontSize: 32,
-            textAlign: "center",
-            marginTop: 10
-        },
-        imageContainer: {
-            width: 200,
-            height: 200,
-            alignSelf: "center",
-            borderRadius: 10,
-            overflow: 'hidden',
-        },
-        imageStyle: {
-            flex: 1,
-            width: undefined,
-            height: undefined,
-        }
-    });
-
-    export default PokemonListItem;
-    ```
+export default PokemonListItem;
+```
 
 Luego en la misma carpeta ***pokemonList*** creamos el archivo **PokemonList** así:
 
@@ -292,107 +295,107 @@ Luego en la misma carpeta ***pokemonList*** creamos el archivo **PokemonList** a
 
 iniciamos con las siguientes importación:
 
-    ```
-    import React from 'react';
-    import PokemonListItem from './PokemonListItem';
-    import { FlatList, View, StyleSheet } from 'react-native';
-    ```
+```javascript
+import React from 'react';
+import PokemonListItem from './PokemonListItem';
+import { FlatList, View, StyleSheet } from 'react-native';
+```
 
 y los estilos que vamos a usar:
 
-    ```
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: 'grey',
-            top: 50,
-            borderRadius: 50
-        },
-        textSyle: {
-            textAlign: 'center'
-        }
-    });
-    ```
+```javascript
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'grey',
+        top: 50,
+        borderRadius: 50
+    },
+    textSyle: {
+        textAlign: 'center'
+    }
+});
+```
 
 Como en el archivo anterior definimos:
 
-    ```
-    type Pokemon = {
-        id: number;
-        name: string;
-        sprites: {
-            front_default: string;
-        };
+```javascript
+type Pokemon = {
+    id: number;
+    name: string;
+    sprites: {
+        front_default: string;
     };
+};
 
-    interface PokemonListProps {
-        data: Pokemon[];
-    }
-    ```
+interface PokemonListProps {
+    data: Pokemon[];
+}
+```
 
 Y posteriormente se crea la funcion **PokemonList** que toma el objeto que devuelve el **api** y lo destructura como argumento **data** para poder mostrar los pokemon como una estructura de **react**.
 
-    ```
-    function PokemonList({ data }: PokemonListProps) {
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => <PokemonListItem pokemon={item} />}
-                />
-            </View>
-        );
-    }
+```javascript
+function PokemonList({ data }: PokemonListProps) {
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+            />
+        </View>
+    );
+}
 
-    ```
+```
 
 este sería el archivo final:
 
-    ```
-    // PokemonList.js - Componente para la lista de Pokémon
-    import React from 'react';
-    import PokemonListItem from './PokemonListItem';
-    import { FlatList, View, StyleSheet } from 'react-native';
+```javascript
+// PokemonList.js - Componente para la lista de Pokémon
+import React from 'react';
+import PokemonListItem from './PokemonListItem';
+import { FlatList, View, StyleSheet } from 'react-native';
 
-    type Pokemon = {
-        id: number;
-        name: string;
-        sprites: {
-            front_default: string;
-        };
+type Pokemon = {
+    id: number;
+    name: string;
+    sprites: {
+        front_default: string;
     };
+};
 
-    interface PokemonListProps {
-        data: Pokemon[];
+interface PokemonListProps {
+    data: Pokemon[];
+}
+
+function PokemonList({ data }: PokemonListProps) {
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'grey',
+        top: 50,
+        borderRadius: 50
+    },
+    textSyle: {
+        textAlign: 'center'
     }
+});
 
-    function PokemonList({ data }: PokemonListProps) {
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={data.map((pokemon, index) => ({ ...pokemon, id: index + 1 }))}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => <PokemonListItem pokemon={item} />}
-                />
-            </View>
-        );
-    }
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: 'grey',
-            top: 50,
-            borderRadius: 50
-        },
-        textSyle: {
-            textAlign: 'center'
-        }
-    });
-
-    export default PokemonList;
-    ```
+export default PokemonList;
+```
 
 Ahora en la carpeta ***mainComponent*** creamos el archivo **MainComponent.tsx**, así:
 
@@ -400,88 +403,88 @@ Ahora en la carpeta ***mainComponent*** creamos el archivo **MainComponent.tsx**
 
 Igual que en los archivos anteriores empazamos con las importaciones:
 
-    ```
-    import React from 'react';
-    import { useFirstGenPokemons } from '../api/APi';
-    import PokemonList from '../pokemonList/PokemonList';
-    import { StyleSheet, Text, View } from 'react-native';
-    ```
+```javascript
+import React from 'react';
+import { useFirstGenPokemons } from '../api/APi';
+import PokemonList from '../pokemonList/PokemonList';
+import { StyleSheet, Text, View } from 'react-native';
+```
 
 Y los estilos que usaremos:
 
-    ```
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'black',
-        },
-        title: {
-            fontSize: 32,
-            color: 'black'
-        },
-    })
-    ```
+```javascript
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+    },
+    title: {
+        fontSize: 32,
+        color: 'black'
+    },
+})
+```
 
 Posteriormente, creamos la funcion **MainComponent()** que será la encargada de retornar los elementos de nuestra aplicación:
 
-    ```
-    export default function MainComponent() {
-        const firstGenPokemonDetails = useFirstGenPokemons();
+```javascript
+export default function MainComponent() {
+    const firstGenPokemonDetails = useFirstGenPokemons();
 
-        console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
 
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>First generation Pokemon</Text>
-                <PokemonList data={firstGenPokemonDetails} />
-            </View>
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>First generation Pokemon</Text>
+            <PokemonList data={firstGenPokemonDetails} />
+        </View>
 
 
-        );
-    }
-    ```
+    );
+}
+```
 
 La linea: `console.log('firstGenPokemonDetails', firstGenPokemonDetails);` nos muestra en consola si la api nos está retornado información.
 
 Finalmente el archivo completo se vería así:
 
-    ```
-    import React from 'react';
-    import { useFirstGenPokemons } from '../api/APi';
-    import PokemonList from '../pokemonList/PokemonList';
-    import { StyleSheet, Text, View } from 'react-native';
+```javascript
+import React from 'react';
+import { useFirstGenPokemons } from '../api/APi';
+import PokemonList from '../pokemonList/PokemonList';
+import { StyleSheet, Text, View } from 'react-native';
 
 
-    export default function MainComponent() {
-        const firstGenPokemonDetails = useFirstGenPokemons();
+export default function MainComponent() {
+    const firstGenPokemonDetails = useFirstGenPokemons();
 
-        console.log('firstGenPokemonDetails', firstGenPokemonDetails);
+    console.log('firstGenPokemonDetails', firstGenPokemonDetails);
 
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>First generation Pokemon</Text>
-                <PokemonList data={firstGenPokemonDetails} />
-            </View>
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>First generation Pokemon</Text>
+            <PokemonList data={firstGenPokemonDetails} />
+        </View>
 
 
-        );
-    }
+    );
+}
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'black',
-        },
-        title: {
-            fontSize: 32,
-            color: 'black'
-        },
-    })
-    ```
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+    },
+    title: {
+        fontSize: 32,
+        color: 'black'
+    },
+})
+```
 
 Si vamos al simulador esta será la vista que tendremos:
 
@@ -489,16 +492,16 @@ Si vamos al simulador esta será la vista que tendremos:
 
 esto porque el archivo de entrada de la aplicación **App.tsx** no se ha modificado, debemos borrar su contenido y poner el siguiente codigo:
 
-    ```
-    import React from 'react'
-    import MainComponent from './src/mainComponent/MainComponent';
+```javascript
+import React from 'react'
+import MainComponent from './src/mainComponent/MainComponent';
 
-    export default function App() {
-    return (
-        <MainComponent />
-    )
-    }
-    ```
+export default function App() {
+return (
+    <MainComponent />
+)
+}
+```
 
 El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la tecla **r** para realizar la acción de ***reload the app***. El resultado final es este:
 
