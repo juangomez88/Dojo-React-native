@@ -47,7 +47,7 @@ En una carpata donde quieras iniciar el proyecto realiza:
 
 ## Iniciar el proyecto con react native
 
-`npx react-native@latest init NOMBRE_PROYECTO`
+```npx react-native@latest init NOMBRE_PROYECTO```
 
 ## [Opcional] Usar una versión o plantilla específica
 
