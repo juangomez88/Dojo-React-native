@@ -5,6 +5,7 @@ import {
     Text,
     View
 }               from 'react-native'
+import { stylesPokemonListItem } from '../styles/stylesPokemonListItem';
 
 type Pokemon = {
     id      : number;
@@ -20,41 +21,17 @@ interface PokemonListItemProps {
 
 export function PokemonListItem({ pokemon } : PokemonListItemProps) {
     return (
-        <View style={styles.container}>
-            <Text style={styles.pokemonContainer}>
+        <View style={stylesPokemonListItem.container}>
+            <Text style={stylesPokemonListItem.pokemonContainer}>
                 {pokemon.id}.{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
             </Text>
 
-            <View style={styles.imageContainer}>
+            <View style={stylesPokemonListItem.imageContainer}>
                 <Image 
                     source  = {{uri: pokemon.sprites.front_default}}
-                    style   = {styles.imageStyle}
+                    style   = {stylesPokemonListItem.imageStyle}
                 />
             </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor : "lightgrey",
-        marginTop   : 10
-    },
-    pokemonContainer: {
-        fontSize    : 32,
-        textAlign   : "center",
-        marginTop   : 10
-    },
-    imageContainer: {
-        width       : 200,
-        height      : 200,
-        alignSelf   : "center",
-        borderRadius: 10,
-        overflow    : 'hidden',
-    },
-    imageStyle: {
-        flex        : 1,
-        width       : undefined,
-        height      : undefined,
-    }
-});

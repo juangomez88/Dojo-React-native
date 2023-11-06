@@ -544,14 +544,13 @@ import React,{
     useState,
     }                           from 'react';
 import {
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
     }                           from 'react-native';
 import { useFirstGenPokemons }  from '../API/API';
 import {PokemonList}            from '../pokemonList/PokemonList';
-
+import { stylesListScreen }     from '../styles/stylesListScreen';
 
 
 export default function ListPokemonScreen() {
@@ -573,33 +572,32 @@ export default function ListPokemonScreen() {
     
     console.log('useFirstGenPokemons', data);
     return (
-        <View style={styles.container}>
-            <View>
-                <Text style         = {styles.title}>Primera Generación</Text>
-                <Text style         = {styles.title}>Pockemon</Text>
+        <View style={stylesListScreen.container}>
+            <View style={stylesListScreen.secundaryContainer}>
+                <Text style         = {stylesListScreen.title}>Primera Generación</Text>
+                <Text style         = {stylesListScreen.title}>Pockemon</Text>
             </View>
-            <View  style={styles.secundaryContainer}>
+            <View  >
                 <PokemonList data={data} />
-                <View style={styles.buttonContainer}>
+                <View style={stylesListScreen.buttonContainer}>
                     <TouchableOpacity
-                        style   = {styles.button}
+                        style   = {stylesListScreen.button}
                         onPress = {goToPreviousPage}
                     >
-                        <Text style = {styles.textButton}>Atras</Text>
+                        <Text style = {stylesListScreen.textButton}>Atras</Text>
                     </TouchableOpacity>
-                    <Text style = {styles.textButton}>{currentPage}</Text>
+                    <Text style = {stylesListScreen.textButton}>{currentPage}</Text>
                     <TouchableOpacity
-                        style   = {styles.button}
+                        style   = {stylesListScreen.button}
                         onPress = {goToNextPage}
                     >
-                        <Text style = {styles.textButton}>Siguiente</Text>
+                        <Text style = {stylesListScreen.textButton}>Siguiente</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -608,16 +606,22 @@ const styles = StyleSheet.create({
         alignItems      : 'center',
         backgroundColor : 'black',
     },
+    secundaryContainer: {
+        flexDirection   : 'column',
+        justifyContent  : 'center',
+        marginbutton    : 50,
+    },
     buttonContainer: {
-        flexDirection  : 'row',
+        flexDirection   : 'row',
         justifyContent  : 'space-between',
         alignItems      : 'center',
     },
     button:{
         backgroundColor: 'blue',
-        padding        : 10,
-        borderRadius   : 30,
-        shadowRadius   : 10,
+        padding         : 10,
+        margin          : 50,
+        borderRadius    : 30,
+        shadowRadius    : 10,
     },
     textButton:{
         color           : 'white',
@@ -627,7 +631,9 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize        : 32,
-        color           : 'black'
+        fontWeight      : 'bold',
+        textAlign       : 'center',
+        color           : 'white',
     },
 })
 ```
@@ -657,3 +663,412 @@ El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la 
 
 ---
 ---
+
+## Organizando un poco nuestro codigo
+
+Una practica recomendada, cuando se esta desarrollando en React Native, es tener separados los componentes de codigo que se encarga de la estilización, esto ayuda a mejorar el rendimiento, realizar reutilización de codigo, mejora la legibilidad y permite evitar los errores.
+
+A continuación cree dentro de la carpeta ./src una carpeta llamada styles. y dentro de esta misma cree los siguientes archivos:
+
+* sylesListScreen.tsx
+* StylesPokemonList.tsx
+* StylesPokemonListItmen.tsx
+
+![Alt text](image-2.png)
+
+A continuación se explicara como haremos el cambio en uno de los archivos (ListPokemonScreen.tsx), luego, debes replicar el mismo procedimineto para los otros dos archivos.
+
+1. Vamos a cambar el nombre a cada uno de los objetos que se encargan de la estilización de cada componente, para ello entramos al componente ListPockemonScreen.tsx,
+
+2. Señale el objeto que se encarga del estilizado, ubicado en la parte inferior del archivo.  y presione la tecla F2, y cambie el nombre, se recomienda el nombre **StylesListScreen** . El anterior, procedimiento cambiará el nombre a todas las instancias que estan utilizando el objeto para estilizar.
+
+3. Seleccione todo el objeto cortelo y peguelo dentro de sylesPokemonScreen, luego resuelva las importaciones.
+
+4. Finalmente vuelva al componente LisPokemonScren.tsx y resuelva las importaciones relacionadas con el nuevo archivo que acaba de crear.
+
+Ahora creemos una carpeta llamada screen. En ella vamos a colocar las pantallas que serán visibles en nuestro dispositivo. en este caso pondremos dentro de la carpeta los archivos:
+
+* ListPokemonScreen.tsx     (ya la teniamos)
+* HomeScreen.tsx            (es nueva)
+* SearchPokemonScreen.tsx   (es nueva)
+
+Si estas trabajando en el editor de codigo Visual Studio Code, este se encargara por nosotros, de cambiar las importaciones en los archivos que utilizan estas pantallas
+
+---
+---
+
+## Implementando la navegación de React Native
+
+En react native hay varias formas de implementar la navegación entre las pantallas: Se pueden crear botones en una pantalla determinada para navegar a otras pantallas, también es posible crear pestañas que permita moverse entre pantallas, o un menu lateral que contanga botones y direcciones a otras pantallas. Para esta aplicación utilizaremos la primera, y para ello utilizaremos el componente stackNavigation de react native. A continuación es impresindible instalar las siguientes librerias en tu proyecto:
+
+1. npm install @react-navigation/native
+2. npm install @react-navigation/native-stack
+3. npm install react-native-safe-area-context
+4. npm install react-native-screens
+
+En la ruta:
+**android/app/src/main/java/nombre_de_tu_proyecto/MainActivity.java**
+
+agrega el siguiente codigo dentro del cuerpo de la clase MainActivity:
+
+```java
+  // ...
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
+  }
+  // ...
+```
+
+Creemos una carpeta llamada stacks dentro de src, dentro de ella, creamos el archivo HomeStackScreen.tsx
+El archivo completo quedaría de la siguiente forma:
+
+```javascript
+//HomeStackScreen.tsx
+import React                            from "react";
+import ListPokemonScreen                from "../screens/ListPokemonScreen";
+import { SearchPokemonScreen }          from "../screens/SearchPokemonScreen";
+import { HomeScreen }                   from "../screens/HomeScreen";
+import { createNativeStackNavigator }   from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+export const HomeStackScreen = () => {
+    return (
+            <Stack.Navigator
+                initialRouteName  = "Inicio"            
+            >
+                <Stack.Screen 
+                    name = "Inicio"
+                    component = {HomeScreen} 
+                />
+                <Stack.Screen 
+                    name = "ListPokemonScreen"
+                    component = {ListPokemonScreen} 
+                />
+                <Stack.Screen 
+                    name = "SearchPokemonScreen"
+                    component = {SearchPokemonScreen}
+                />
+            </Stack.Navigator>
+
+    );
+};
+```
+
+Si se analiza con detalle el codigo de HomeStackScreen, alli estamos relacionando 3 pantallas:
+
+* Una pantalla de inicio                        (HomeScreen.tsx)
+* Una pantalla donde listamos todos los pokemon (ListPokemonScreen.tsx)
+* Una pantalla donde podemos buscar por pokemon (SearchPokemonScreen.tsx)
+
+---
+Vamos a crear nuestra pantalla de inicio HomeScreen.tsx:
+
+```javascript
+//HomeScreen.tsx
+import React,{
+    }                               from 'react';
+import {
+    Text, 
+    TouchableOpacity, 
+    View, 
+    }                               from 'react-native';
+import { NativeStackScreenProps }   from '@react-navigation/native-stack';
+import { stylesListScreen }         from '../styles/stylesListScreen';
+
+interface Props extends NativeStackScreenProps<any, any> { }
+
+export const HomeScreen = ({navigation }: Props) => {
+
+    return (
+        <View style = {stylesListScreen.container}>
+            <Text style         = {stylesListScreen.title}>Pantalla Principal</Text>
+            <View style = {stylesListScreen.buttonContainer}>
+                <TouchableOpacity
+                        style   = {stylesListScreen.button}
+                        onPress = {() => navigation.navigate('ListPokemonScreen')}
+                    >
+                    <Text style = {stylesListScreen.textButton}>Lista Pokemon</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style       = {stylesListScreen.button}
+                    onPress     = {() => navigation.navigate('SearchPokemonScreen')}
+                >
+                    <Text style = {stylesListScreen.textButton}>Buscar Pokemon</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+```
+
+Si observamos bien en los componente donde se llama la opción de style; se esta reutilizando el código stylesListScreen, por lo que nos estamos ahorrando algúnas líneas de código.
+
+La pantalla de HomeScreen debe quedar aproximadamente de la siguiente forma:
+![Alt text](image-1.png)
+
+Ahora vamos a modificar la componente App.tsx, quien es el que primero se llama a renderizar, por ello direccionamos a nuestro componente acabado de construir HomeStackScreen.tsx, quien se encargara de encolar las diferentes pantallas que manejemos dentro de nuestra aplicación.
+
+```javascript
+//app.tsx
+import React                    from 'react'
+import { HomeStackScreen }      from './src/stack/HomeStackScreen';
+import { NavigationContainer }  from '@react-navigation/native';
+
+export default function App() {
+return (
+    <NavigationContainer>
+        <HomeStackScreen />
+    </NavigationContainer> 
+
+    )   
+}
+```
+
+---
+Ahora modifiquemos un poco nuestra ListPockemonScreen.tsx, tanto para reorganizar un poco sus elementos, como para habilitar la propiedad de navegación:
+
+```javascript
+//ListPockemonScreen.tsx
+import React,{
+    useState,
+    }                               from 'react';
+import {
+    Text,
+    TouchableOpacity,
+    View
+    }                               from 'react-native';
+import { useFirstGenPokemons }      from '../API/API';
+import {PokemonList}                from '../pokemonList/PokemonList';
+import { stylesListScreen }         from '../styles/stylesListScreen';
+import { NativeStackScreenProps }   from '@react-navigation/native-stack';
+// import { StackScreenProps } from '@react-navigation/stack';
+
+// interface Props extends StackScreenProps<any, any> { }
+interface Props extends NativeStackScreenProps<any, any> { }
+
+
+export default function ListPokemonScreen({navigation }: Props) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const data                          = useFirstGenPokemons(currentPage);
+
+    const goToPreviousPage              = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const goToNextPage                  = () => {
+        if (data.length < 10) {
+            return;
+        }
+        setCurrentPage(currentPage + 1);
+    };
+    
+    console.log('useFirstGenPokemons', data);
+    return (
+        <View style = {stylesListScreen.container}>
+            <View  >
+                <View style = {stylesListScreen.secundaryContainer}>
+                    <Text style = {stylesListScreen.title}>Primera Generación</Text>
+                    <Text style = {stylesListScreen.title}>Pokemon</Text>
+                </View>
+                <View  style = {stylesListScreen.buttonContainer}>
+                <TouchableOpacity
+                        style   = {stylesListScreen.button}
+                        onPress = {goToPreviousPage}
+                    >
+                        <Text style = {stylesListScreen.textButton}>Pag. Anterior</Text>
+                    </TouchableOpacity>
+                    <Text style = {stylesListScreen.textButton}>{currentPage}</Text>
+                    <TouchableOpacity
+                        style   = {stylesListScreen.button}
+                        onPress = {goToNextPage}
+                    >
+                        <Text style = {stylesListScreen.textButton}>Pag. Siguiente</Text>
+                    </TouchableOpacity>
+                </View>
+                <PokemonList data={data} />
+                <View>
+                    <TouchableOpacity
+                        style   = {stylesListScreen.button}
+                        onPress = {() => navigation.goBack()}
+                    >
+                        <Text style = {stylesListScreen.textButton}>Atras</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+        </View>
+    );
+}
+
+```
+
+---
+
+Ahora creemos nuestro vista de busqueda de Pokemon, primero creemos dentro de nuestra carpeta styles el archivo que llamaremos stylesDimension.tsx, este se encargara del calculo de las dimensiones del dispositivo:
+
+```javascript
+import { Dimensions } from "react-native";
+
+let {height}            = Dimensions.get('window');
+let box_count           = 1 || 2 || 3;
+export const box_height = height / box_count;
+```
+
+agreguemos algunas propiedades a stylesListScreen.tsx, teniendo en cuuenta el archivo anteriormente creado, y otras propiedades que utilizaremos en nuestro buscador de Pokémon:
+
+```javascript
+//stylesListScreen.tsx
+import { StyleSheet } from "react-native";
+import { box_height } from "./stylesDimension";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
+export const stylesListScreen = StyleSheet.create({
+    container: {
+        flex            : 1,
+        justifyContent  : 'center',
+        alignItems      : 'center',
+        backgroundColor : 'black',
+    },
+    secundaryContainer: {
+        flexDirection   : 'column',
+        marginbutton    : 5,
+    },
+    box: {
+        height: box_height,
+    },
+    boxBody : {
+        flex            : 1,
+        justifyContent  : 'center',
+    },
+    buttonContainer: {
+        flexDirection   : 'row',
+        justifyContent  : 'space-evenly',
+        alignItems      : 'center',
+    },
+    button:{
+        backgroundColor: 'blue',
+        padding         : 5,
+        margin          : 50,
+        borderRadius    : 30,
+        shadowRadius    : 5,
+    },
+    textButton:{
+        color           : 'white',
+        fontWeight      : 'bold',
+        textAlign       : 'center',
+        textTransform   : 'uppercase',
+    },
+    title: {
+        fontSize        : 35,
+        fontWeight      : 'bold',
+        textAlign       : 'center',
+        color           : 'white',
+    },
+    labelScreen                 : {
+        color             : 'white',
+        fontWeight        : '600',
+        fontSize          : 20,
+        marginTop         : 10,
+        marginLeft        : 20,
+        marginRight       : 20,
+    },
+    textInput                   : {
+        color             : Colors.dark,
+        backgroundColor   : 'white',
+        fontSize          : 18,
+        marginTop         : 10,
+        marginLeft        : 10,
+        marginRight       : 10,
+        marginBottom      : 10,
+        fontWeight        : '600',
+        paddingLeft       : 15,
+        borderWidth       : 1,
+        borderRadius      : 10,
+        borderColor       : Colors.black,
+        paddingRight      : 10,
+    },
+})
+```
+
+y nuestro archivo de busqueda SearchPokemonScreen.tsx quedaría de la siguiente forma:
+
+```javascript
+import React,{
+    useState,
+    }                               from "react";
+import {
+    View,
+    Text,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+    }                               from "react-native";
+import axios                        from "axios";
+import { NativeStackScreenProps }   from "@react-navigation/native-stack";
+import { stylesListScreen }         from "../styles/stylesListScreen";
+
+// interface Props extends StackScreenProps<any, any> { }
+interface Props extends NativeStackScreenProps<any, any> { }
+
+export const SearchPokemonScreen = ({navigation }: Props) => {
+    const [searchTerm, setSearchTerm]   = useState('');
+    const [pokemonData, setPokemonData] = useState<any>(null);
+
+    const searchPokemon = async () => {
+        try {
+            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`);
+            setPokemonData(response.data);
+        } catch (error) {
+            console.error(error);
+            setPokemonData(null);
+        }
+    };
+
+    return(
+        <View style   = {stylesListScreen.container}>
+            <View style={[stylesListScreen.box, stylesListScreen.boxBody]}>
+                <View>
+                    <Text style={stylesListScreen.title}>Buscar Pokemon</Text>
+                </View>
+                <TextInput
+                    style       =   {stylesListScreen.textInput}
+                    placeholder = "Nombre del Pokémon"
+                    value       = {searchTerm}
+                    onChangeText= {(text) => setSearchTerm(text.toLowerCase())}
+                />
+                <TouchableOpacity
+                    style       = {stylesListScreen.button}
+                    onPress     = {searchPokemon}
+                >
+                    <Text style = {stylesListScreen.textButton}>Buscar</Text>
+                </TouchableOpacity>
+                {pokemonData && (
+                    <ScrollView  style = {stylesListScreen.secundaryContainer}>
+                        <Text style = {stylesListScreen.labelScreen}>  Nombre: {pokemonData.name}</Text>
+                        <Image
+                            source  = {{ uri: pokemonData.sprites.front_default }}
+                            style   = {{ width: 300, height: 300 }}
+                        />
+                        <Text style = {stylesListScreen.labelScreen}>Experiencia Base: {pokemonData.base_experience}</Text>
+                        <Text  style = {stylesListScreen.labelScreen}>Habilidades:</Text>
+                            {pokemonData.abilities.map((ability: any) => (
+                                <Text  style = {stylesListScreen.labelScreen} key={ability.ability.name}>{ability.ability.name}</Text>
+                            ))}
+                    </ScrollView>
+                )}
+            </View>
+            <TouchableOpacity
+                style   = {stylesListScreen.button}
+                onPress = {() => navigation.goBack()}
+            >
+                <Text style = {stylesListScreen.textButton}>Atras</Text>
+            </TouchableOpacity>
+        </View>
+        )
+}
+```

@@ -5,6 +5,7 @@ import {
     StyleSheet
     }                       from 'react-native';
 import {PokemonListItem}    from './PokemonListItem';
+import { stylesPokemonList } from '../styles/stylesPokemonList';
 
 type Pokemon = {
     id      : number;
@@ -20,7 +21,7 @@ interface PokemonListProps {
 
 export function PokemonList({ data }: PokemonListProps) {
     return (
-        <View style={styles.container}>
+        <View style={stylesPokemonList.container}>
             <FlatList
                 data        = {data.map((pokemon, index)    => ({ ...pokemon, id: index + 1 }))}
                 keyExtractor= {(item)                       => item.id.toString()}
@@ -29,16 +30,3 @@ export function PokemonList({ data }: PokemonListProps) {
         </View>
     );
 }
-
-
-const styles = StyleSheet.create({
-    container   : {
-        flex            : 1,
-        backgroundColor : 'grey',
-        top             : 50,
-        borderRadius    : 50
-    },
-    textSyle    : {
-        textAlign       : 'center'
-    }
-});

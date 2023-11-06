@@ -1,8 +1,12 @@
-import React          from 'react'
-import ListPokemonScreen  from './src/mainComponent/ListPokemonScreen';
+import React                    from 'react'
+import { HomeStackScreen }      from './src/stack/HomeStackScreen';
+import { NavigationContainer }  from '@react-navigation/native';
 
 export default function App() {
 return (
-    <ListPokemonScreen />
-)
+    <NavigationContainer>
+        <HomeStackScreen />
+    </NavigationContainer> 
+
+    )   
 }
