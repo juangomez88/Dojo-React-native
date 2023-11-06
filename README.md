@@ -668,9 +668,9 @@ El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la 
 
 Una practica recomendada, cuando se esta desarrollando en React Native, es tener separados los componentes de codigo que se encarga de la estilización, esto ayuda a mejorar el rendimiento, realizar reutilización de codigo, mejora la legibilidad y permite evitar los errores.
 
-A continuación cree dentro de la carpeta ./src una carpeta llamada styles. y dentro de esta misma cree los siguientes archivos:
+A continuación crearemos dentro de la carpeta ./src una carpeta llamada styles. y dentro de esta misma cree los siguientes archivos:
 
-* sylesListScreen.tsx
+* StylesListScreen.tsx
 * StylesPokemonList.tsx
 * StylesPokemonListItmen.tsx
 
@@ -682,7 +682,7 @@ A continuación se explicara como haremos el cambio en uno de los archivos (List
 
 2. Señale el objeto que se encarga del estilizado, ubicado en la parte inferior del archivo.  y presione la tecla F2, y cambie el nombre, se recomienda el nombre **StylesListScreen** . El anterior, procedimiento cambiará el nombre a todas las instancias que estan utilizando el objeto para estilizar.
 
-3. Seleccione todo el objeto cortelo y peguelo dentro de sylesPokemonScreen, luego resuelva las importaciones.
+3. Seleccione todo el objeto cortelo y peguelo dentro de stylesPokemonScreen, luego resuelva las importaciones.
 
 4. Finalmente vuelva al componente LisPokemonScren.tsx y resuelva las importaciones relacionadas con el nuevo archivo que acaba de crear.
 
@@ -806,7 +806,9 @@ export const HomeScreen = ({navigation }: Props) => {
 Si observamos bien en los componente donde se llama la opción de style; se esta reutilizando el código stylesListScreen, por lo que nos estamos ahorrando algúnas líneas de código.
 
 La pantalla de HomeScreen debe quedar aproximadamente de la siguiente forma:
+
 ![Alt text](image-1.png)
+
 
 Ahora vamos a modificar la componente App.tsx, quien es el que primero se llama a renderizar, por ello direccionamos a nuestro componente acabado de construir HomeStackScreen.tsx, quien se encargara de encolar las diferentes pantallas que manejemos dentro de nuestra aplicación.
 
