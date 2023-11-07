@@ -709,9 +709,13 @@ En react native hay varias formas de implementar la navegación entre las pantal
 2. npm install @react-navigation/native-stack
 3. npm install react-native-safe-area-context
 4. npm install react-native-screens
+5. npm install axios
 
 En la ruta:
 **android/app/src/main/java/nombre_de_tu_proyecto/MainActivity.java**
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/914d8940-d988-4305-b1c2-ab784e980410)
+
 
 agrega el siguiente codigo dentro del cuerpo de la clase MainActivity:
 
