@@ -665,6 +665,10 @@ El resultado puede tardar un poco, en caso no verse un cambio podemos tipear la 
 ---
 
 ## Organizando un poco nuestro codigo
+Empezaremos renombrando la carpeta que teniamos nombrada como **mainComponent** a **screens**, por el momento solo tendremos en esta carpeta el archivo **ListPokemonScreen.tsx**:
+
+![image](https://github.com/juangomez88/Dojo-React-native/assets/60585685/223e39fc-130f-46ff-b209-f5c92bcfe26e)
+
 
 Una practica recomendada, cuando se esta desarrollando en React Native, es tener separados los componentes de codigo que se encarga de la estilización, esto ayuda a mejorar el rendimiento, realizar reutilización de codigo, mejora la legibilidad y permite evitar los errores.
 
