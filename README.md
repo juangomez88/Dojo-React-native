@@ -763,7 +763,7 @@ Si se analiza con detalle el codigo de HomeStackScreen, alli estamos relacionand
 * Una pantalla donde podemos buscar por pokemon (SearchPokemonScreen.tsx)
 
 ---
-Vamos a crear nuestra pantalla de inicio HomeScreen.tsx:
+Vamos a crear nuestra pantalla de inicio HomeScreen.tsx, para ello creamos dentro de src la carpeta screens:
 
 ```javascript
 //HomeScreen.tsx
